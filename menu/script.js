@@ -72,16 +72,28 @@ const menu = [
     img: './img/item-9.jpeg',
     desc: `skateboard fam synth authentic semiotics. Live-edge lyft af, edison bulb yuccie crucifix microdosing.`,
   },
+  {
+    id: 10,
+    title: 'steak dinner',
+    category: 'dinner',
+    price: 39.99,
+    img: './img/item-10.jpeg',
+    desc: `skateboard fam synth authentic semiotics. Live-edge lyft af, edison bulb yuccie crucifix microdosing.`,
+  },
 ];
 
 // DOM selection
 const sectionCenter = document.querySelector('.section-center');
+const container = document.querySelector('.btn-container');
 
 // populate the page on page load
-window.addEventListener('DOMContentLoaded', displayMenuItems(menu));
+window.addEventListener('DOMContentLoaded', () => {
+  displayMenuItems(menu);
+  displayMenuButtons();
+});
 
 function displayMenuItems(menuItems) {
-  let displayMenu = menuItems
+  const displayMenu = menuItems
     .map(
       item => `
       <article class="menu-item">
@@ -98,4 +110,40 @@ function displayMenuItems(menuItems) {
     )
     .join('');
   sectionCenter.innerHTML = displayMenu;
+}
+
+function displayMenuButtons() {
+  const categories = menu.reduce(
+    (values, item) => {
+      if (!values.includes(item.category)) {
+        values.push(item.category);
+      }
+      return values;
+    },
+    ['all']
+  );
+  const categoryBtns = categories
+    .map(
+      category =>
+        `<button class="filter-btn" type="button" data-id=${category}>${category}</button>`
+    )
+    .join('');
+  container.innerHTML = categoryBtns;
+  const filterBtns = container.querySelectorAll('.filter-btn');
+  // filter items
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', e => {
+      const category = e.currentTarget.dataset.id;
+      const menuCategory = menu.filter(menuItem => {
+        if (menuItem.category === category) {
+          return menuItem;
+        }
+      });
+      if (category === 'all') {
+        displayMenuItems(menu);
+      } else {
+        displayMenuItems(menuCategory);
+      }
+    });
+  });
 }
