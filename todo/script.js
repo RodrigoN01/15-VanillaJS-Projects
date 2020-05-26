@@ -12,10 +12,14 @@ let editFlag = false;
 let editID = '';
 
 // EVENT LISTENERS
+
 // submit form
 form.addEventListener('submit', addItem);
+// clear items
+clearBtn.addEventListener('click', clearItems);
 
 // FUNCTIONS
+
 // Add items to list
 function addItem(e) {
   e.preventDefault();
@@ -41,6 +45,10 @@ function addItem(e) {
         </button>
       </div>
     `;
+    const deleteBtn = element.querySelector('.delete-btn');
+    const editBtn = element.querySelector('.edit-btn');
+    deleteBtn.addEventListener('click', deleteItem);
+    editBtn.addEventListener('click', editItem);
     // append child
     list.appendChild(element);
     // display alert
@@ -70,6 +78,39 @@ function displayAlert(text, action) {
   }, 1000);
 }
 
+// clear items
+function clearItems() {
+  const items = document.querySelectorAll('.grocery-item');
+
+  if (items.length > 0) {
+    items.forEach(item => {
+      list.removeChild(item);
+    });
+  }
+  container.classList.remove('show-container');
+  displayAlert('empty list', 'danger');
+  setBackToDefault();
+  // localStorage.removeItem('list');
+}
+
+// delete function
+function deleteItem(e) {
+  const element = e.currentTarget.parentElement.parentElement;
+  list.removeChild(element);
+  if (list.children.length === 0) {
+    container.classList.remove('show-container');
+  }
+  displayAlert('item removed', 'danger');
+  setBackToDefault();
+  // remove from local storage
+  // removeFromLocalStorage(id);
+}
+
+// edit function
+function editItem() {
+  console.log('item, edited');
+}
+
 // set back to default
 function setBackToDefault() {
   grocery.value = '';
@@ -81,3 +122,5 @@ function setBackToDefault() {
 function addToLocalStorage(id, value) {
   console.log('added to local storage');
 }
+
+function removeFromLocalStorage(id) {}
